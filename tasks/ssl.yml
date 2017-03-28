@@ -1,0 +1,10 @@
+---
+- name: Create site SSL configuration for Nginx
+  template:
+    src: "{{ wordpress_nginx_site_ssl_template }}"
+    dest: "{{ wordpress_nginx_config_ssl_path }}/ssl-{{ item.key }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_dict: "{{ wordpress_sites }}"
+  notify: reload nginx

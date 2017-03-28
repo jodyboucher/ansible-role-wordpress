@@ -1,0 +1,40 @@
+---
+- name: Create database for site
+  mysql_db:
+    name: "{{ item.value.db.name }}"
+    state: present
+    login_host: "{{ item.value.db.host }}"
+    login_user: "{{ wordpress_db_root_username }}"
+    login_password: "{{ wordpress_db_root_password }}"
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Create database user and grant permissions
+  mysql_user:
+    name: "{{ item.value.db.username }}"
+    password: "{{ item.value.db.password }}"
+    host: "{{ item.value.db.host }}"
+    append_privs: yes
+    priv: "{{ item.value.db.name }}.*:ALL"
+    state: present
+    login_host: "{{ item.value.db.host }}"
+    login_user: "{{ wordpress_db_root_username }}"
+    login_password: "{{ wordpress_db_root_password }}"
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Copy database dump to remote
+  copy:
+    src: "{{ item.value.db.import_data_file }}"
+    dest: /tmp
+  with_dict: "{{ wordpress_sites }}"
+  when: item.value.db.import_data | default(false)
+
+- name: Import database
+  mysql_db:
+    name: "{{ item.value.db.name }}"
+    state: import
+    target: "/tmp/{{ item.value.db.import_data_file | basename }}"
+    login_host: "{{ item.value.db.host }}"
+    login_user: "{{ item.value.db.username }}"
+    login_password: "{{ item.value.db.password }}"
+  with_dict: "{{ wordpress_sites }}"
+  when: item.value.db.import_data | default(false)

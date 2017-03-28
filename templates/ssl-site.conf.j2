@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+
+ssl_certificate {{ wordpress_nginx_certificate_path }}/{{ item.key }}/fullchain.pem;
+ssl_certificate_key {{ wordpress_nginx_certificate_path }}/{{ item.key }}/privkey.pem;

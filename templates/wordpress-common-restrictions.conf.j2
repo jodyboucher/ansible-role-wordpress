@@ -1,0 +1,54 @@
+# {{ ansible_managed }}
+
+# Global WordPress restrictions configuration file.
+# Designed to be included in any server {} block.
+
+location = /favicon.ico {
+	log_not_found off;
+	access_log off;
+}
+
+location = /robots.txt {
+	allow all;
+	log_not_found off;
+	access_log off;
+}
+
+# Prevent clients from accessing hidden files (starting with a dot)
+# Access to `/.well-known/` is allowed.
+# Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+location ~* /\.(?!well-known\/) {
+	deny all;
+}
+
+# Deny access to any files with a .php extension in the uploads directory
+# Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+location ~* /(?:uploads|files)/.*\.php$ {
+	deny all;
+}
+
+# Deny public access to wp-config.php
+location ~* wp-config.php {
+	deny all;
+}
+
+# Deny access to other misc php files
+location ~* wp-admin/includes {
+  deny all;
+}
+
+location ~* wp-includes/theme-compat/ {
+  deny all;
+}
+
+location ~* /wp-includes/.*.php$ {
+	deny all;
+	access_log off;
+	log_not_found off;
+}
+
+location ~* /wp-content/.*.php$ {
+	deny all;
+	access_log off;
+	log_not_found off;
+}

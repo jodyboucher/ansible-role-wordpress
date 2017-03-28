@@ -1,0 +1,73 @@
+---
+- name: Create web root for each site
+  file:
+    path: "{{ item.value.www_root }}"
+    owner: "{{ wordpress_nginx_user }}"
+    group: "{{ wordpress_nginx_group }}"
+    mode: 0775
+    state: directory
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Create logs folder for each site
+  file:
+    path: "{{ item.value.www_root }}/logs"
+    owner: "{{ wordpress_nginx_user }}"
+    group: "{{ wordpress_nginx_group }}"
+    mode: 0775
+    state: directory
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Create folder for wordpress common configs
+  file:
+    path: "{{ wordpress_nginx_config_wordpress_path }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Create common WordPress configuration for Nginx
+  template:
+    src: "{{ wordpress_nginx_common_template }}"
+    dest: "{{ wordpress_nginx_config_wordpress_path }}/common.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nginx
+
+- name: Create common WordPress configuration of restrictions for Nginx
+  template:
+    src: "{{ wordpress_nginx_common_restrictions_template }}"
+    dest: "{{ wordpress_nginx_config_wordpress_path }}/common-restrictions.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nginx
+
+- name: Create default server configuration for Nginx
+  template:
+    src: "{{ wordpress_nginx_site_default_template }}"
+    dest: "{{ wordpress_nginx_config_sites_path }}/default.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload nginx
+
+- name: Create WordPress sites configuration for Nginx
+  template:
+    src: "{{ wordpress_nginx_site_template }}"
+    dest: "{{ wordpress_nginx_config_sites_path }}/{{ item.key }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_dict: "{{ wordpress_sites }}"
+  notify: reload nginx
+
+- name: Enable WordPress site
+  file:
+    src: "{{ wordpress_nginx_config_sites_path }}/{{ item.key }}.conf"
+    dest: "{{ wordpress_nginx_config_sites_path }}/../sites-enabled/{{ item.key }}.conf"
+    owner: root
+    group: root
+    state: link
+  with_dict: "{{ wordpress_sites }}"
+  notify: reload nginx

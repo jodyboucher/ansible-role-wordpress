@@ -1,0 +1,13 @@
+---
+- include: database.yml
+- include: ssl.yml
+- include: nginx.yml
+
+- name: Setup WP system cron
+  cron:
+    name: "{{ item.key }} WordPress cron"
+    minute: "*/15"
+    user: "{{ wordpress_nginx_user }}"
+    job: "cd {{ item.value.www_root }}/site/wp }} && wp cron event run --due-now > /dev/null 2>&1"
+    cron_file: "wordpress-{{ item.key | replace('.', '_') }}"
+  with_dict: "{{ wordpress_sites }}"
