@@ -9,7 +9,7 @@ server {
   listen [::]:443 ssl;
 
   include {{ wordpress_nginx_config_ssl_path }}/ssl-{{ item.key }}.conf;
-  include {{ wordpress_nginx_config_ssl_path }}/{{ wordpress_nginx_common_ssl_conf }};
+  include {{ wordpress_nginx_config_ssl_path }}/ssl-common.conf;
 
   server_name www.{{ item.key }};
 
@@ -33,7 +33,7 @@ server {
   listen [::]:443 ssl http2;
 
   include {{ wordpress_nginx_config_ssl_path }}/ssl-{{ item.key }}.conf;
-  include {{ wordpress_nginx_config_ssl_path }}/{{ wordpress_nginx_common_ssl_conf }};
+  include {{ wordpress_nginx_config_ssl_path }}/ssl-common.conf;
 
   server_name {{ item.key }};
   root {{ item.value.www_root }}/site/web;
