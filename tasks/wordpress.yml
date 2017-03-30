@@ -44,7 +44,7 @@
 
 - name: Install WordPress
   command: wp core install
-            --url="{{ item.value.key }}"
+            --url="{{ item.key }}"
             --title="{{ item.value.title }}"
             --admin_user="{{ item.value.admin_user }}"
             --admin_password="{{ item.value.admin_password }}"

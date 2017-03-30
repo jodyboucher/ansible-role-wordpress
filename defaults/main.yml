@@ -11,7 +11,7 @@ wordpress_db_root_password: changeme
 
 wordpress_sites:
   example.com:
-    title: example.com site
+    title: "example.com site"
     admin_user: jody
     admin_password: jody
     admin_email: jody@jodyboucher.com
@@ -23,8 +23,8 @@ wordpress_sites:
       import_data: false
       import_data_file:
       table_prefix: wp_
-    www_root: /var/www/example_com
-    wordpress_root: /var/www/example_com/wordpress
+    www_root: "/var/www/example_com"
+    wordpress_root: "/var/www/example_com/wordpress"
 
 # The user/group that runs nginx processes
 wordpress_nginx_user: "www-data"
