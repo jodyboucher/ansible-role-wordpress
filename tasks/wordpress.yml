@@ -9,7 +9,7 @@
   with_dict: "{{ wordpress_sites }}"
 
 - name: Check if WordPress is already downloaded
-  stat: path="{{ item.value.www_root }}/index.php"
+  stat: path="{{ item.value.wordpress_root }}/index.php"
   register: wordpress_download_check
   with_dict: "{{ wordpress_sites }}"
 
@@ -37,19 +37,19 @@
 - name: Check if WordPress is installed
   command: wp core is-installed
   args:
-    chdir: "{{ item.value.wordpress_root }}/"
+    chdir: "{{ item.value.wordpress_root }}"
   register: wordpress_install_check
   ignore_errors: true
   with_dict: "{{ wordpress_sites }}"
 
 - name: Install WordPress
   command: wp core install
-            --url="{{ item.key }}"
-            --title="{{ item.title }}"
-            --admin_user="{{ item.admin_user }}"
-            --admin_password="{{ item.admin_password }}"
-            --admin_email="{{ item.admin_email }}"
+            --url="{{ item.value.key }}"
+            --title="{{ item.value.title }}"
+            --admin_user="{{ item.value.admin_user }}"
+            --admin_password="{{ item.value.admin_password }}"
+            --admin_email="{{ item.value.admin_email }}"
   args:
-      chdir: "{{ item.value.wordpress_root }}/"
+      chdir: "{{ item.value.wordpress_root }}"
   with_dict: "{{ wordpress_sites }}"
   when: wordpress_install_check | failed
