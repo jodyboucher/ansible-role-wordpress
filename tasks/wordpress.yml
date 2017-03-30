@@ -1,0 +1,51 @@
+---
+- name: Create WordPress directory for each site
+  file:
+    path: "{{ item.value.www_root }}/wordpress"
+    owner: "{{ wordpress_nginx_user }}"
+    group: "{{ wordpress_nginx_group }}"
+    mode: 0775
+    state: directory
+  with_dict: "{{ wordpress_sites }}"
+
+- name: Check if WordPress is already downloaded
+  stat: path="{{ item.value.www_root }}/index.php"
+  register: wordpress_download_check
+
+- name: Download WordPress
+  command: wp core download
+            --path={{ item.value.wordpress_root }}
+            --locale={{ wordpress_language }}
+            --version={{ wordpress_version }}
+  args:
+    creates: "{{ item.value.wordpress_root }}"
+  with_dict: "{{ wordpress_sites }}"
+  when: wordpress_download_check == false
+
+- name: Configure WordPress
+  command: wp core config
+           --path="{{ item.value.wordpress_root }}"
+           --dbhost="{{ item.value.db.host }}"
+           --dbname="{{ item.value.db.name }}"
+           --dbuser="{{ item.value.db.username }}"
+           --dbpass="{{ item.value.db.password }}"
+           --dbprefix="{{ item.value.db.table_prefix }}"
+  when: wordpress_download_check == false
+
+- name: Check if WordPress is installed
+  command: wp core is-installed
+  args:
+    chdir: "{{ item.value.wordpress_root }}/"
+  register: wordpress_install_check
+  ignore_errors: True
+
+- name: Install WordPress
+  command: wp core install
+            --url="{{ item.key }}"
+            --title="{{ item.title }}"
+            --admin_user="{{ item.admin_user }}"
+            --admin_password="{{ item.admin_password }}"
+            --admin_email="{{ item.admin_email }}"
+  args:
+      chdir: "{{ item.value.wordpress_root }}/"
+  when: wordpress_install_check | failed

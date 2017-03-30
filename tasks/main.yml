@@ -2,6 +2,7 @@
 - include: database.yml
 - include: ssl.yml
 - include: nginx.yml
+- include: wordpress.yml
 
 - name: Setup WP system cron
   cron:
