@@ -38,6 +38,7 @@
   command: wp core is-installed
   args:
     chdir: "{{ item.value.wordpress_root }}"
+  remote_user: "{{ wordpress_nginx_user }}"
   register: wordpress_install_check
   ignore_errors: true
   with_dict: "{{ wordpress_sites }}"
@@ -50,6 +51,7 @@
             --admin_password="{{ item.value.admin_password }}"
             --admin_email="{{ item.value.admin_email }}"
   args:
-      chdir: "{{ item.value.wordpress_root }}"
+    chdir: "{{ item.value.wordpress_root }}"
+  remote_user:  "{{ wordpress_nginx_user }}"
   with_dict: "{{ wordpress_sites }}"
   when: wordpress_install_check | failed
