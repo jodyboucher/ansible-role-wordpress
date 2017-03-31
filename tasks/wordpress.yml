@@ -21,7 +21,7 @@
   args:
     creates: "{{ item.value.wordpress_root }}"
   with_dict: "{{ wordpress_sites }}"
-  when: wordpress_download_check == false
+  when: wordpress_download_check.exists == false
 
 - name: Configure WordPress
   command: wp core config
@@ -32,18 +32,19 @@
            --dbpass="{{ item.value.db.password }}"
            --dbprefix="{{ item.value.db.table_prefix }}"
   with_dict: "{{ wordpress_sites }}"
-  when: wordpress_download_check == false
+  when: wordpress_download_check.exists == false
 
 - name: Check if WordPress is installed
-  command: wp core is-installed --allow-root
-  args:
-    chdir: "{{ item.value.wordpress_root }}"
+  command: wp core is-installed
+            --path={{ item.value.wordpress_root }}
+            --allow-root
   register: wordpress_install_check
   ignore_errors: true
   with_dict: "{{ wordpress_sites }}"
 
 - name: Install WordPress
   command: wp core install
+            --path={{ item.value.wordpress_root }}
             --url="{{ item.key }}"
             --title="{{ item.value.title }}"
             --admin_user="{{ item.value.admin_user }}"
