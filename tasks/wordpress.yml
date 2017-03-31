@@ -35,10 +35,9 @@
   when: wordpress_download_check == false
 
 - name: Check if WordPress is installed
-  command: wp core is-installed
+  command: wp core is-installed --allow-root
   args:
     chdir: "{{ item.value.wordpress_root }}"
-  remote_user: "{{ wordpress_nginx_user }}"
   register: wordpress_install_check
   ignore_errors: true
   with_dict: "{{ wordpress_sites }}"
@@ -49,9 +48,18 @@
             --title="{{ item.value.title }}"
             --admin_user="{{ item.value.admin_user }}"
             --admin_password="{{ item.value.admin_password }}"
-            --admin_email="{{ item.value.admin_email }}"
+            --admin_email="{{ item.value.admin_email
+            --allow-root
   args:
     chdir: "{{ item.value.wordpress_root }}"
-  remote_user:  "{{ wordpress_nginx_user }}"
   with_dict: "{{ wordpress_sites }}"
   when: wordpress_install_check | failed
+
+- name: Change ownership of WordPress installation
+  file:
+    path: "{{ item.value.wordpress_root }}"
+    owner: "{{ wordpress_nginx_user }}"
+    group: "{{ wordpress_nginx_group }}"
+    state: directory
+    recurse: yes
+  with_dict: "{{ wordpress_sites }}"
