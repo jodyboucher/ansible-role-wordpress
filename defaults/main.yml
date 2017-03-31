@@ -14,7 +14,7 @@ wordpress_sites:
     title: "example.com site"
     admin_user: jody
     admin_password: jody
-    admin_email: jody@jodyboucher.com
+    admin_email: "jody@jodyboucher.com"
     db:
       name: example_com
       host: localhost
@@ -22,7 +22,7 @@ wordpress_sites:
       password: example_com
       import_data: false
       import_data_file:
-      table_prefix: wp_
+      table_prefix: "wp_"
     www_root: "/var/www/example_com"
     wordpress_root: "/var/www/example_com/wordpress"
 
