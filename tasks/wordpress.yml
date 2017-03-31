@@ -48,7 +48,7 @@
             --title="{{ item.value.title }}"
             --admin_user="{{ item.value.admin_user }}"
             --admin_password="{{ item.value.admin_password }}"
-            --admin_email="{{ item.value.admin_email
+            --admin_email="{{ item.value.admin_email }}"
             --allow-root
   args:
     chdir: "{{ item.value.wordpress_root }}"
