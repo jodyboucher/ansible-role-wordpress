@@ -21,7 +21,7 @@
   args:
     creates: "{{ item.value.wordpress_root }}"
   with_dict: "{{ wordpress_sites }}"
-  when: wordpress_download_check.exists == false
+  when: wordpress_download_check.stat.exists == false
 
 - name: Configure WordPress
   command: wp core config
@@ -32,7 +32,7 @@
            --dbpass="{{ item.value.db.password }}"
            --dbprefix="{{ item.value.db.table_prefix }}"
   with_dict: "{{ wordpress_sites }}"
-  when: wordpress_download_check.exists == false
+  when: wordpress_download_check.stat.exists == false
 
 - name: Check if WordPress is installed
   command: wp core is-installed
