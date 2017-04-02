@@ -15,24 +15,26 @@
 
 - name: Download WordPress
   command: wp core download
-            --path={{ item.value.wordpress_root }}
+            --path={{ item.item.value.wordpress_root }}
             --locale={{ wordpress_language }}
             --version={{ wordpress_version }}
+            --allow-root
   args:
-    creates: "{{ item.value.wordpress_root }}"
-  with_dict: "{{ wordpress_sites }}"
-  when: wordpress_download_check.stat.exists == false
+    creates: "{{ item.item.value.wordpress_root }}/index.hp"
+  with_items: "{{ wordpress_download_check.results }}"
+  when: item.stat.exists == false
 
 - name: Configure WordPress
   command: wp core config
-           --path="{{ item.value.wordpress_root }}"
-           --dbhost="{{ item.value.db.host }}"
-           --dbname="{{ item.value.db.name }}"
-           --dbuser="{{ item.value.db.username }}"
-           --dbpass="{{ item.value.db.password }}"
-           --dbprefix="{{ item.value.db.table_prefix }}"
-  with_dict: "{{ wordpress_sites }}"
-  when: wordpress_download_check.stat.exists == false
+           --path={{ item.item.value.wordpress_root }}
+           --dbhost={{ item.item.value.db.host }}
+           --dbname={{ item.item.value.db.name }}
+           --dbuser={{ item.item.value.db.username }}
+           --dbpass={{ item.item.value.db.password }}
+           --dbprefix={{ item.item.value.db.table_prefix }}
+           --allow-root
+  with_items: "{{ wordpress_download_check.results }}"
+  when: item.stat.exists == false
 
 - name: Check if WordPress is installed
   command: wp core is-installed
@@ -61,6 +63,7 @@
     path: "{{ item.value.wordpress_root }}"
     owner: "{{ wordpress_nginx_user }}"
     group: "{{ wordpress_nginx_group }}"
+    mode: "o-rwx"
     state: directory
     recurse: yes
   with_dict: "{{ wordpress_sites }}"
