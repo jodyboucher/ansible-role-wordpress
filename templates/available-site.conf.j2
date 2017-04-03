@@ -8,7 +8,11 @@ server {
   listen 443 ssl;
   listen [::]:443 ssl;
 
+  {% if wordpress_nginx_certificate_use_selfsigned %}
+  include {{ wordpress_nginx_certificate_selfsigned }};
+  {% else %}
   include {{ wordpress_nginx_config_ssl_path }}/ssl-{{ item.key }}.conf;
+  {% endif %}
   include {{ wordpress_nginx_config_ssl_path }}/ssl-common.conf;
 
   server_name www.{{ item.key }};
@@ -32,7 +36,11 @@ server {
   listen 443 ssl http2;
   listen [::]:443 ssl http2;
 
+  {% if wordpress_nginx_certificate_use_selfsigned %}
+  include {{ wordpress_nginx_certificate_selfsigned }};
+  {% else %}
   include {{ wordpress_nginx_config_ssl_path }}/ssl-{{ item.key }}.conf;
+  {% endif %}
   include {{ wordpress_nginx_config_ssl_path }}/ssl-common.conf;
 
   server_name {{ item.key }};

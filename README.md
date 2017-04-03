@@ -72,6 +72,12 @@ wordpress_nginx_config_wordpress_path: "{{ wordpress_nginx_config_path }}/wordpr
 
 # Path to certificates used for SSL
 wordpress_nginx_certificate_path: "/etc/letsencrypt/live"
+
+# true to use self-signed certs, false to use production certs
+wordpress_nginx_certificate_use_selfsigned: true
+
+# The self-signed cert
+wordpress_nginx_certificate_selfsigned: "{{ wordpress_nginx_config_path }}/snippets/snakeoil.conf"
 ```
 
 ## Dependencies
