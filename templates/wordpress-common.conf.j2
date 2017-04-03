@@ -73,7 +73,3 @@ location ~ [^/]\.php(/|$) {
 	fastcgi_cache WORDPRESS;
 	fastcgi_cache_valid  60m;
 }
-
-location ~ /purge(/.*) {
-	fastcgi_cache_purge WORDPRESS "$scheme$request_method$host$1";
-}
