@@ -1,13 +1,9 @@
 ---
-wordpress_version: 4.7.3
-wordpress_language: en_US
-
 # The name of the database root user or other user with
 # privileges to create databases and user and assign priveleges.
 wordpress_db_root_username: root
 # The password for the database root user
 wordpress_db_root_password: changeme
-
 
 wordpress_sites:
   example.com:
@@ -25,6 +21,16 @@ wordpress_sites:
       table_prefix: "wp_"
     www_root: "/var/www/example_com"
     wordpress_root: "/var/www/example_com/wordpress"
+
+# Install WordPress core
+# core is installed into wordpress_data.[site].wordpress_root
+wordpress_install_core: true
+
+# The version of WordPress to installed
+wordpress_version: 4.7.3
+
+# The WordPress language to install
+wordpress_language: en_US
 
 # The user/group that runs nginx processes
 wordpress_nginx_user: "www-data"

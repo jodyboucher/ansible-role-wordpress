@@ -37,15 +37,31 @@ wordpress_db_root_password: changeme
 
 
 wordpress_sites:
-  example.com:
-    db:
-      name: example_com
-      host: localhost
-      username: example_com
-      password: example_com
-      import_data: false
-      import_data_file:
-    www_root: /var/www/example_com
+example.com:
+  title: "example.com site"
+  admin_user: admin_user
+  admin_password: adminuser
+  admin_email: "admin@example.com"
+  db:
+    name: example_com
+    host: localhost
+    username: example_com
+    password: example_com
+    import_data: false
+    import_data_file:
+    table_prefix: "wp_"
+  www_root: "/var/www/example_com"
+  wordpress_root: "/var/www/example_com/wordpress"
+
+# Install WordPress core
+# core is installed into wordpress_data.[site].wordpress_root
+wordpress_install_core: true
+
+# The version of WordPress to installed
+wordpress_version: 4.7.3
+
+# The WordPress language to install
+wordpress_language: en_US
 
 # The user/group that runs nginx processes
 wordpress_nginx_user: "www-data"
