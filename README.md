@@ -1,6 +1,5 @@
 # Ansible role: wordpress
 
-
 An [Ansible](https://www.ansible.com/) role that installs and configures WordPress sites.
 
 The role assumes any configured site will only provide access through the SSL port.
@@ -11,7 +10,7 @@ This role is designed for Ubuntu 16.04 Xenial.
 
 This role requires `root` access so be sure to enable privilege escalation:
 
-```
+```yml
 # privilege escalation of play
 - hosts: wordpress-servers
   become: true
@@ -28,7 +27,8 @@ This role requires `root` access so be sure to enable privilege escalation:
 ## Role Variables
 
 The available variables of this role are listed here along with default values:
-```
+
+```yml
 # The name of the database root user or other user with
 # privileges to create databases and user and assign priveleges.
 wordpress_db_root_username: root
@@ -102,7 +102,7 @@ None.
 
 ## Example Playbook
 
-```
+```yml
 ---
 - hosts: wordpress-servers
   become: true
@@ -114,7 +114,7 @@ None.
 
 Inside `vars/main.yml`:
 
-```
+```yml
 ---
 wordpress_db_root_username: root
 wordpress_db_root_password: somepassword
@@ -134,13 +134,14 @@ wordpress_sites:
 ## Installation
 
 On the command-line:
-```
-$ ansible-galaxy install git+https://github.com/jodyboucher/ansible-role-wordpress.git
+
+```bash
+ansible-galaxy install git+https://github.com/jodyboucher/ansible-role-wordpress.git
 ```
 
 or in a role file (requirements.yml):
 
-```
+```yml
 - name: wordpress
   src: https://github.com/jodyboucher/ansible-role-wordpress
   version: master
@@ -153,5 +154,3 @@ MIT
 ## Author Information
 
 This role was created by [Jody Boucher](https://jodyboucher.com/).
-
-0
